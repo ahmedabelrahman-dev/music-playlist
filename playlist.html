@@ -14,7 +14,10 @@
       <h2 id="welcome-user"></h2>
       <button id="logout-btn">Logout</button>
     </div>
-    <button id="create-playlist-btn">+ Create Playlist</button>
+    <form id="create-playlist-form" class="create-playlist-form">
+      <input type="text" id="new-playlist-name" placeholder="New Playlist Name" required />
+      <button type="submit" id="create-playlist-btn">+ Create Playlist</button>
+    </form>
     <div id="playlists-list"></div>
     <div id="playlist-details" style="display:none;"></div>
   </div>

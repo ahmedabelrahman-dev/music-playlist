@@ -90,7 +90,7 @@ window.openPlaylist = function(idx) {
         playlist.songs.forEach((song, sidx) => {
             html += `<li>
                 <span><strong>${song.title}</strong> by ${song.artist}</span>
-                <button onclick="playSong('${encodeURIComponent(song.url)}')">Play</button>
+                <a href="${song.url}" target="_blank" rel="noopener" class="song-link-btn">Play</a>
                 <button onclick="removeSong(${idx},${sidx})">Remove</button>
             </li>`;
         });
@@ -125,19 +125,8 @@ window.removeSong = function(playlistIdx, songIdx) {
     openPlaylist(playlistIdx);
 };
 
-window.playSong = function(url) {
-    url = decodeURIComponent(url);
-    let audio = document.getElementById('audio-player');
-    if (!audio) {
-        audio = document.createElement('audio');
-        audio.id = 'audio-player';
-        audio.controls = true;
-        playlistDetails.appendChild(audio);
-    }
-    audio.src = url;
-    audio.style.display = '';
-    audio.play();
-};
+
+// Removed audio playback, now using link to video
 
 window.deletePlaylist = function(idx) {
     let users = getUsers();
@@ -150,17 +139,24 @@ window.deletePlaylist = function(idx) {
     playlistDetails.style.display = 'none';
 };
 
-createPlaylistBtn.addEventListener('click', () => {
-    const name = prompt('Enter playlist name:');
-    if (!name) return;
-    let users = getUsers();
-    const username = getCurrentUser();
-    const userIdx = users.findIndex(u => u.username === username);
-    if (userIdx === -1) return;
-    users[userIdx].playlists.push({ name, songs: [] });
-    setUsers(users);
-    renderPlaylists();
-});
+
+const createPlaylistForm = document.getElementById('create-playlist-form');
+if (createPlaylistForm) {
+    createPlaylistForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const nameInput = document.getElementById('new-playlist-name');
+        const name = nameInput.value.trim();
+        if (!name) return;
+        let users = getUsers();
+        const username = getCurrentUser();
+        const userIdx = users.findIndex(u => u.username === username);
+        if (userIdx === -1) return;
+        users[userIdx].playlists.push({ name, songs: [] });
+        setUsers(users);
+        renderPlaylists();
+        nameInput.value = '';
+    });
+}
 
 logoutBtn.addEventListener('click', () => {
     clearCurrentUser();
